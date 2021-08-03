@@ -1,4 +1,5 @@
 local nvim_lsp = require("lspconfig")
+local util = require 'lspconfig/util'
 
 local format_async = function(err, _, result, _, bufnr)
   if err ~= nil or result == nil then return end
@@ -66,6 +67,39 @@ nvim_lsp.tsserver.setup {
     client.resolved_capabilities.document_formatting = false
     on_attach(client)
   end
+}
+
+nvim_lsp.vuels.setup {
+  on_attach = function(client)
+    client.resolved_capabilities.document_formattings = true
+    on_attach(client)
+  end,
+  settings = {
+    vetur = {
+      completion = {
+        autoimport = true,
+        useScaffoldSnippets = true,
+      },
+      format = {
+        defaultFormatter = {
+          html = "none",
+          js = "prettier",
+          ts = "prettier",
+        },
+      },
+      validation = {
+        template = true,
+        script = true,
+        style = true,
+        templateProps = true,
+        interpolation = true
+      },
+      experimental = {
+        templateInterplationService = true
+      }
+    }
+  },
+  root_dir = util.root_pattern("package.json", "webpack.config.js")
 }
 
 local filetypes = {
