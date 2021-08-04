@@ -5,8 +5,10 @@ call plug#begin('~/.vim/plugged')
 Plug 'neovim/nvim-lspconfig'
 Plug 'tjdevries/nlua.nvim'
 Plug 'tjdevries/lsp_extensions.nvim'
-Plug 'hrsh7th/nvim-compe'
-Plug 'hrsh7th/vim-vsnip'
+Plug 'nvim-lua/completion-nvim'
+" Plug 'hrsh7th/nvim-compe'
+" Plug 'hrsh7th/vim-vsnip'
+" Plug 'hrsh7th/vim-vsnip-integ'
 
 " Neovim Tree shitter
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -44,8 +46,8 @@ Plug 'kristijanhusak/vim-js-file-import', {'do': 'npm install'}
 Plug 'SirVer/ultisnips'
 Plug 'vuciv/vim-bujo'
 Plug 'jwalton512/vim-blade'
-Plug 'heavenshell/vim-jsdoc', { 
-  \ 'for': ['javascript', 'javascript.jsx','typescript'], 
+Plug 'heavenshell/vim-jsdoc', {
+  \ 'for': ['javascript', 'javascript.jsx','typescript'],
   \ 'do': 'make install'
 \}
 Plug 'digitaltoad/vim-pug'
