@@ -32,3 +32,7 @@ set updatetime=50
 set shortmess+=c
 
 set colorcolumn=80
+
+" grep
+set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
+set grepformat=%f:%l:%c:%m

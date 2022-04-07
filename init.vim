@@ -15,6 +15,8 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-treesitter/playground'
 
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-projectionist'
+Plug 'tpope/vim-commentary'
 Plug 'vim-utils/vim-man'
 " Plug 'mbbill/undotree'
 Plug 'gruvbox-community/gruvbox'
@@ -40,9 +42,6 @@ Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'sbdchd/neoformat'
 Plug 'dbeniamine/cheat.sh-vim'
 
-Plug 'tpope/vim-commentary'
-Plug 'ludovicchabant/vim-gutentags'
-Plug 'kristijanhusak/vim-js-file-import', {'do': 'npm install'}
 Plug 'SirVer/ultisnips'
 Plug 'vuciv/vim-bujo'
 Plug 'jwalton512/vim-blade'
@@ -57,6 +56,7 @@ Plug 'autozimu/LanguageClient-neovim', {
     \ }
 Plug 'wavded/vim-stylus'
 Plug 'rescript-lang/vim-rescript'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 call plug#end()
 
@@ -159,13 +159,11 @@ end
 EOF
 
 :tnoremap <Esc> <C-\><C-n>
-" nmap <Leader>py :Neoformat<CR>
-" augroup fmt
-"   autocmd!
-"   au BufWritePre * try | undojoin | Neoformat | catch /^Vim\%((\a\+)\)\=:E790/ | finally | silent Neoformat | endtry
-" augroup END
-
-let g:gutentags_define_advanced_commands = 1
+nmap <Leader>py :Neoformat<CR>
+augroup fmt
+  autocmd!
+  au BufWritePre * try | undojoin | Neoformat | catch /^Vim\%((\a\+)\)\=:E790/ | finally | silent Neoformat | endtry
+augroup END
 
 autocmd BufReadPost *.kt setlocal filetype=kotlin
 
@@ -176,3 +174,5 @@ let g:LanguageClient_serverCommands = {
 noremap <silent> <C-s>          :update<CR>
 vnoremap <silent> <C-s>         <C-C>:update<CR>
 inoremap <silent> <C-s>         <C-O>:update<CR>
+
+
