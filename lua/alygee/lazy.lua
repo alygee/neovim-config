@@ -81,14 +81,14 @@ require('lazy').setup({
     },
   },
 
-  { -- Add indentation guides even on blank lines
-    'lukas-reineke/indent-blankline.nvim',
-    -- Enable `lukas-reineke/indent-blankline.nvim`
-    -- See `:help indent_blankline.txt`
+  {
+    -- Add indentation guides even on blank lines
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
     opts = {
       char = '┊',
-      show_trailing_blankline_indent = false,
-    },
+      show_trailing_blankline_indent = false
+    }
   },
 
   -- "gc" to comment visual regions/lines
@@ -111,19 +111,27 @@ require('lazy').setup({
   },
 
   -- Colorscheme
-  { 'rose-pine/neovim', name = 'rose-pine' },
-  { 'dylanaraps/wal.vim', name = 'wal' },
-  { 'AlphaTechnolog/pywal.nvim', as = 'pywal' },
-
-  { -- Highlight, edit, and navigate code
-    'nvim-treesitter/nvim-treesitter',
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter-textobjects',
-    },
-    config = function()
-      pcall(require('nvim-treesitter.install').update { with_sync = true })
+  -- { 'rose-pine/neovim', name = 'rose-pine' },
+  {
+    "lalitmee/cobalt2.nvim",
+    event = { "ColorSchemePre" }, -- if you want to lazy load
+    dependencies = { "tjdevries/colorbuddy.nvim" },
+    init = function()
+        require("colorbuddy").colorscheme("cobalt2")
     end,
   },
+  -- { 'dylanaraps/wal.vim', name = 'wal' },
+  -- { 'AlphaTechnolog/pywal.nvim', as = 'pywal' },
+
+  -- { -- Highlight, edit, and navigate code
+  --   'nvim-treesitter/nvim-treesitter',
+  --   dependencies = {
+  --     'nvim-treesitter/nvim-treesitter-textobjects',
+  --   },
+  --   config = function()
+  --     pcall(require('nvim-treesitter.install').update { with_sync = true })
+  --   end,
+  -- },
 
   -- Formatting
   {'sbdchd/neoformat' },
@@ -144,5 +152,5 @@ require('lazy').setup({
   --
   --    An additional note is that if you only copied in the `init.lua`, you can just comment this line
   --    to get rid of the warning telling you that there are not plugins in `lua/custom/plugins/`.
-  { import = 'custom.plugins' },
+  -- { import = 'custom.plugins' },
 }, {})
