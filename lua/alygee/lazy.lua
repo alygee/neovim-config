@@ -49,7 +49,18 @@ require('lazy').setup({
 
   { -- Autocompletion
     'hrsh7th/nvim-cmp',
-    dependencies = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip' },
+    dependencies = {
+      'hrsh7th/cmp-nvim-lsp',
+      -- 'L3MON4D3/LuaSnip',
+      {
+	"L3MON4D3/LuaSnip",
+	-- follow latest release.
+	tag = "v2.*", -- Replace <CurrentMajor> by the latest released major (first number of latest release)
+	-- install jsregexp (optional!:).
+	build = "make install_jsregexp"
+},
+      'saadparwaiz1/cmp_luasnip'
+    },
   },
 
   -- Useful plugin to show you pending keybinds.
@@ -121,15 +132,15 @@ require('lazy').setup({
   -- { 'dylanaraps/wal.vim', name = 'wal' },
   -- { 'AlphaTechnolog/pywal.nvim', as = 'pywal' },
 
-  -- { -- Highlight, edit, and navigate code
-  --   'nvim-treesitter/nvim-treesitter',
-  --   dependencies = {
-  --     'nvim-treesitter/nvim-treesitter-textobjects',
-  --   },
-  --   config = function()
-  --     pcall(require('nvim-treesitter.install').update { with_sync = true })
-  --   end,
-  -- },
+  { -- Highlight, edit, and navigate code
+    'nvim-treesitter/nvim-treesitter',
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter-textobjects',
+    },
+    config = function()
+      pcall(require('nvim-treesitter.install').update { with_sync = true })
+    end,
+  },
 
   -- Formatting
   {'sbdchd/neoformat' },
