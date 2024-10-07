@@ -1,10 +1,6 @@
--- require('colorbuddy').colorscheme('cobalt2')
-require('material').setup({
-    -- ... other settings
-    disable = {
-        -- ... other settings
-        background = true,
-    },
+require("gruvbox").setup({
+  contrast = "dark",
+  transparent_mode = true,
 })
 
-vim.cmd 'colorscheme material'
+vim.cmd("colorscheme gruvbox")
