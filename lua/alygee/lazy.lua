@@ -248,6 +248,13 @@ require("lazy").setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         "stylua", -- Used to format Lua code
+        "pint",
+        "php-debug-adapter",
+        "phpstan",
+        "prettierd",
+        "tailwindcss-language-server",
+        "html-lsp",
+        "intelephense",
       })
       require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
@@ -434,48 +441,24 @@ require("lazy").setup({
   --    to get rid of the warning telling you that there are not plugins in `lua/custom/plugins/`.
   -- { import = 'custom.plugins' },
 
-  { -- Autoformat
-    "stevearc/conform.nvim",
-    event = { "BufWritePre" },
-    cmd = { "ConformInfo" },
-    keys = {
-      {
-        "<leader>f",
-        function()
-          require("conform").format({ async = true, lsp_format = "fallback" })
-        end,
-        mode = "",
-        desc = "[F]ormat buffer",
-      },
-    },
-    opts = {
-      notify_on_error = false,
-      format_on_save = function(bufnr)
-        -- Disable "format_on_save lsp_fallback" for languages that don't
-        -- have a well standardized coding style. You can add additional
-        -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
-        local lsp_format_opt
-        if disable_filetypes[vim.bo[bufnr].filetype] then
-          lsp_format_opt = "never"
-        else
-          lsp_format_opt = "fallback"
-        end
-        return {
-          timeout_ms = 500,
-          lsp_format = lsp_format_opt,
-        }
-      end,
-      formatters_by_ft = {
-        lua = { "stylua" },
-        -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
-        --
-        -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
-      },
-    },
+  { -- Formatting
+    "sbdchd/neoformat",
   },
+  -- { -- Autoformat
+  --   "stevearc/conform.nvim",
+  --   event = { "BufWritePre" },
+  --   cmd = { "ConformInfo" },
+  --   keys = {
+  --     {
+  --       "<leader>f",
+  --       function()
+  --         require("conform").format({ async = true, lsp_format = "fallback" })
+  --       end,
+  --       mode = "",
+  --       desc = "[F]ormat buffer",
+  --     },
+  --   },
+  -- },
 
   { -- Autocompletion
     "hrsh7th/nvim-cmp",
@@ -599,5 +582,11 @@ require("lazy").setup({
     event = "VimEnter",
     dependencies = { "nvim-lua/plenary.nvim" },
     opts = { signs = false },
+  },
+
+  {
+    "pmizio/typescript-tools.nvim",
+    dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+    opts = {},
   },
 }, {})
