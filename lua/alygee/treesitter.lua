@@ -13,6 +13,7 @@ vim.defer_fn(function()
       "vim",
       "vimdoc",
       "javascript",
+      "c_sharp",
       "html",
       "markdown",
       "query",

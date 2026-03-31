@@ -233,6 +233,7 @@ require("lazy").setup({
             },
           },
         },
+        omnisharp = {},
       }
 
       -- Ensure the servers and tools above are installed
@@ -249,6 +250,7 @@ require("lazy").setup({
       vim.list_extend(ensure_installed, {
         "stylua", -- Used to format Lua code
         "prettierd",
+        "csharpier",
         "tailwindcss-language-server",
         "html-lsp",
         "intelephense",
@@ -352,6 +354,10 @@ require("lazy").setup({
         changedelete = { text = "~" },
       },
     },
+  },
+  {
+    "tpope/vim-dotenv",
+    event = "BufReadPre",
   },
 
   { -- Set lualine as statusline

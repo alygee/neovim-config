@@ -111,3 +111,60 @@ end)
 vim.keymap.set("n", "<C-S-N>", function()
   harpoon:list():next()
 end)
+
+local function get_dotnet_workdir()
+  local current_file = vim.api.nvim_buf_get_name(0)
+  local start_path = current_file ~= "" and vim.fn.fnamemodify(current_file, ":p:h") or vim.loop.cwd()
+
+  local solution = vim.fs.find(function(name)
+    return name:match("%.sln$") ~= nil
+  end, { path = start_path, upward = true, type = "file" })[1]
+
+  if solution ~= nil then
+    return vim.fs.dirname(solution)
+  end
+
+  local project = vim.fs.find(function(name)
+    return name:match("%.csproj$") ~= nil
+  end, { path = start_path, upward = true, type = "file" })[1]
+
+  if project ~= nil then
+    return vim.fs.dirname(project)
+  end
+
+  return nil
+end
+
+local function run_dotnet(command)
+  local workdir = get_dotnet_workdir()
+
+  if workdir == nil then
+    workdir = vim.loop.cwd()
+    vim.notify("Не найден .sln или .csproj, запускаю команду из текущей директории", vim.log.levels.WARN)
+  end
+
+  vim.cmd("botright split")
+  vim.cmd("resize 12")
+  vim.fn.termopen(command, { cwd = workdir })
+  vim.cmd("startinsert")
+end
+
+vim.keymap.set("n", "<leader>db", function()
+  run_dotnet("dotnet build")
+end, { desc = "Dotnet: сборка" })
+
+vim.keymap.set("n", "<leader>dr", function()
+  run_dotnet("dotnet run")
+end, { desc = "Dotnet: запуск" })
+
+vim.keymap.set("n", "<leader>dt", function()
+  run_dotnet("dotnet test")
+end, { desc = "Dotnet: тесты" })
+
+vim.keymap.set("n", "<leader>dc", function()
+  run_dotnet("dotnet clean")
+end, { desc = "Dotnet: очистка" })
+
+vim.keymap.set("n", "<leader>dw", function()
+  run_dotnet("dotnet watch run")
+end, { desc = "Dotnet: watch run" })
