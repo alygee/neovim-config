@@ -89,3 +89,12 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 vim.g.have_nerd_font = false
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
+  callback = function()
+    if vim.fn.expand("%:t") == "_test" then
+      vim.bo.updatetime = 1000 -- 1 секунда для тестовых файлов
+    end
+  end,
+})

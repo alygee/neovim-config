@@ -1,7 +1,2 @@
-vim.cmd [[
-augroup fmt
-  autocmd!
-  autocmd BufWritePre * undojoin | Neoformat
-augroup END
-]]
+-- Автоформатирование выполняется через conform.nvim.
 

@@ -3,6 +3,7 @@ require("alygee.set")
 require("alygee.remap")
 require("alygee.telescope")
 require("alygee.treesitter")
+require("alygee.conform")
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`

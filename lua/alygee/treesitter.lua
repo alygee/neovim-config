@@ -71,10 +71,10 @@ vim.defer_fn(function()
       swap = {
         enable = true,
         swap_next = {
-          ["<leader>a"] = "@parameter.inner",
+          ["<leader>h"] = "@parameter.inner",
         },
         swap_previous = {
-          ["<leader>A"] = "@parameter.inner",
+          ["<leader>l"] = "@parameter.inner",
         },
       },
     },
@@ -97,6 +97,12 @@ vim.defer_fn(function()
           task = "📌",
           lazy = "💤 ",
         },
+      },
+    },
+
+    injections = {
+      php = {
+        html = "(php_region|php_script_element)", -- паттерны для инъекций HTML
       },
     },
   })
