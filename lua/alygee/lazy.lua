@@ -111,22 +111,21 @@ require("lazy").setup({
             vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
           end
 
+          local telescope = require("telescope.builtin")
+
           -- Jump to the definition of the word under your cursor.
           --  This is where a variable was first declared, or where a function is defined, etc.
           --  To jump back, press <C-t>.
-          map("gd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
+          map("gd", telescope.lsp_definitions, "[G]oto [D]efinition")
 
           -- Find references for the word under your cursor.
-          map("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
+          map("gr", telescope.lsp_references, "[G]oto [R]eferences")
 
           -- Jump to the implementation of the word under your cursor.
-          --  Useful when your language has ways of declaring types without an actual implementation.
-          map("gI", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
+          map("gI", telescope.lsp_implementations, "[G]oto [I]mplementation")
 
           -- Jump to the type of the word under your cursor.
-          --  Useful when you're not sure what type a variable is and you want to see
-          --  the definition of its *type*, not where it was *defined*.
-          map("<leader>D", require("telescope.builtin").lsp_type_definitions, "Type [D]efinition")
+          map("<leader>D", telescope.lsp_type_definitions, "Type [D]efinition")
 
           -- Fuzzy find all the symbols in your current document.
           --  Symbols are things like variables, functions, types, etc.
@@ -233,8 +232,17 @@ require("lazy").setup({
             },
           },
         },
-        omnisharp = {},
+        -- C#: csharp_ls (Mason: `csharp-language-server`, бинарник `csharp-ls`).
+        -- Если установка в Mason падает (DotnetToolSettings.xml): обновите .NET SDK или
+        -- вручную: `dotnet tool install -g csharp-ls --version 0.20.0` и PATH с `~/.dotnet/tools`.
+        csharp_ls = {},
       }
+
+      -- mason-lspconfig v2+: `handlers` удалён; серверы включаются через `vim.lsp.enable()` (см. :h mason-lspconfig).
+      -- Настройки и capabilities для cmp задаём через `vim.lsp.config` *до* setup mason-lspconfig.
+      for server_name, server_opts in pairs(servers) do
+        vim.lsp.config(server_name, vim.tbl_deep_extend("force", { capabilities = capabilities }, server_opts))
+      end
 
       -- Ensure the servers and tools above are installed
       --  To check the current status of installed tools and/or manually install
@@ -258,16 +266,10 @@ require("lazy").setup({
       })
       require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
+      -- Не поднимать OmniSharp, если пакет ещё установлен — иначе два LSP на .cs
       require("mason-lspconfig").setup({
-        handlers = {
-          function(server_name)
-            local server = servers[server_name] or {}
-            -- This handles overriding only values explicitly passed
-            -- by the server configuration above. Useful when disabling
-            -- certain features of an LSP (for example, turning off formatting for ts_ls)
-            server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-            require("lspconfig")[server_name].setup(server)
-          end,
+        automatic_enable = {
+          exclude = { "omnisharp", "omnisharp_mono" },
         },
       })
     end,

@@ -13,8 +13,9 @@ require("conform").setup({
     else
       lsp_format_opt = "fallback"
     end
+    -- 500 мс слишком мало: Prettier (особенно без кэша prettierd) часто не успевает
     return {
-      timeout_ms = 500,
+      timeout_ms = 8000,
       lsp_format = lsp_format_opt,
     }
   end,

@@ -90,6 +90,23 @@ vim.g.maplocalleader = " "
 
 vim.g.have_nerd_font = false
 
+local trim_cr_group = vim.api.nvim_create_augroup("trim_cr_before_save", { clear = true })
+vim.api.nvim_create_autocmd("BufWritePre", {
+  group = trim_cr_group,
+  pattern = "*",
+  callback = function(args)
+    if not vim.bo[args.buf].modifiable or vim.bo[args.buf].buftype ~= "" then
+      return
+    end
+
+    local view = vim.fn.winsaveview()
+    vim.api.nvim_buf_call(args.buf, function()
+      vim.cmd([[%s/\r$//e]])
+    end)
+    vim.fn.winrestview(view)
+  end,
+})
+
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
   callback = function()
