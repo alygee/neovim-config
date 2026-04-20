@@ -145,26 +145,30 @@ local function run_dotnet(command)
 
   vim.cmd("botright split")
   vim.cmd("resize 12")
+  -- Иначе split даёт два окна на один буфер — termopen превратит его в терминал сразу вверху и внизу.
+  vim.cmd("enew")
   vim.fn.termopen(command, { cwd = workdir })
   vim.cmd("startinsert")
 end
 
-vim.keymap.set("n", "<leader>db", function()
+-- Префикс <leader>n, а не <leader>d: иначе пересекается с группой which-key «[D]ocument»
+-- и команда может выполниться дважды (два split с терминалом).
+vim.keymap.set("n", "<leader>nb", function()
   run_dotnet("dotnet build")
 end, { desc = "Dotnet: сборка" })
 
-vim.keymap.set("n", "<leader>dr", function()
+vim.keymap.set("n", "<leader>nr", function()
   run_dotnet("dotnet run")
 end, { desc = "Dotnet: запуск" })
 
-vim.keymap.set("n", "<leader>dt", function()
+vim.keymap.set("n", "<leader>nt", function()
   run_dotnet("dotnet test")
 end, { desc = "Dotnet: тесты" })
 
-vim.keymap.set("n", "<leader>dc", function()
+vim.keymap.set("n", "<leader>nc", function()
   run_dotnet("dotnet clean")
 end, { desc = "Dotnet: очистка" })
 
-vim.keymap.set("n", "<leader>dw", function()
+vim.keymap.set("n", "<leader>nw", function()
   run_dotnet("dotnet watch run")
 end, { desc = "Dotnet: watch run" })
