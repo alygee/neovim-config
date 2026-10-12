@@ -45,3 +45,11 @@ ls.add_snippets("all", {
     i(0),
   }),
 })
+
+ls.add_snippets("all", {
+  s("cl", {
+    t("console.log("),
+    i(0),
+    t(")"),
+  }),
+})

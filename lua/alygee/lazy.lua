@@ -24,8 +24,8 @@ require("lazy").setup({
   -- NOTE: First, some plugins that don't require any configuration
 
   -- Git related plugins
-  -- "tpope/vim-fugitive",
-  -- "tpope/vim-rhubarb",
+  "tpope/vim-fugitive",
+  "tpope/vim-rhubarb",
 
   -- Detect tabstop and shiftwidth automatically
   "tpope/vim-sleuth",
@@ -236,6 +236,20 @@ require("lazy").setup({
         -- Если установка в Mason падает (DotnetToolSettings.xml): обновите .NET SDK или
         -- вручную: `dotnet tool install -g csharp-ls --version 0.20.0` и PATH с `~/.dotnet/tools`.
         csharp_ls = {},
+        -- Python: basedpyright — типы/автодополнение/переходы, ruff — линтер + code actions.
+        -- Сортировку импортов отдаём ruff, hover — basedpyright, иначе оба отвечают дважды.
+        basedpyright = {
+          settings = {
+            basedpyright = {
+              disableOrganizeImports = true,
+            },
+          },
+        },
+        ruff = {
+          on_attach = function(client)
+            client.server_capabilities.hoverProvider = false
+          end,
+        },
       }
 
       -- mason-lspconfig v2+: `handlers` удалён; серверы включаются через `vim.lsp.enable()` (см. :h mason-lspconfig).

@@ -1,5 +1,19 @@
 local util = require("conform.util")
 
+-- Проект «выбирает» oxfmt наличием его конфига (.oxfmtrc.json/.oxfmtrc.jsonc)
+-- вверх по дереву от файла — та же конвенция, что и у самого oxc. Если конфига
+-- нет, форматируем js/ts как раньше, через prettierd → prettier.
+local oxfmt_markers = { ".oxfmtrc.json", ".oxfmtrc.jsonc" }
+
+local function js_ts_formatters(bufnr)
+  local bufname = vim.api.nvim_buf_get_name(bufnr)
+  local dir = bufname ~= "" and vim.fs.dirname(bufname) or vim.loop.cwd()
+  if vim.fs.root(dir, oxfmt_markers) ~= nil then
+    return { "oxfmt" }
+  end
+  return { "prettierd", "prettier" }
+end
+
 require("conform").setup({
   notify_on_error = false,
   format_on_save = function(bufnr)
@@ -24,11 +38,12 @@ require("conform").setup({
     blade = { "blade-formatter" },
     cs = { "csharpier" },
     lua = { "stylua" },
-    python = { "isort", "black" },
-    ["javascript"] = { "prettierd", "prettier" },
-    ["javascriptreact"] = { "prettierd", "prettier" },
-    ["typescript"] = { "prettierd", "prettier" },
-    ["typescriptreact"] = { "prettierd", "prettier" },
+    -- ruff заменяет isort + black; бинарник ставит Mason вместе с LSP `ruff`
+    python = { "ruff_organize_imports", "ruff_format" },
+    ["javascript"] = js_ts_formatters,
+    ["javascriptreact"] = js_ts_formatters,
+    ["typescript"] = js_ts_formatters,
+    ["typescriptreact"] = js_ts_formatters,
     ["vue"] = { "prettierd", "prettier" },
     ["css"] = { "prettierd", "prettier" },
     ["scss"] = { "prettierd", "prettier" },
