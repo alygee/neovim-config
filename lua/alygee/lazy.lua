@@ -355,6 +355,7 @@ require("lazy").setup({
         { "<leader>w", group = "[W]orkspace" },
         { "<leader>t", group = "[T]oggle" },
         { "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
+        { "<leader>i", group = "[I]Python REPL", mode = { "n", "v" } },
       },
     },
   },
@@ -635,5 +636,66 @@ require("lazy").setup({
         client.server_capabilities.semanticTokensProvider = nil
       end,
     },
+  },
+
+  { -- REPL: отправка строк/выделения/ячеек `# %%` в ipython в соседнем сплите
+    "Vigemus/iron.nvim",
+    ft = "python",
+    cmd = { "IronRepl", "IronRestart", "IronFocus", "IronHide" },
+    config = function()
+      local view = require("iron.view")
+
+      -- ipython из venv проекта видит его пакеты; глобальный (uv tool) — нет.
+      -- Поэтому сначала $VIRTUAL_ENV, потом .venv/venv вверх от файла, потом PATH.
+      local function ipython_cmd(meta)
+        local candidates = {}
+        if vim.env.VIRTUAL_ENV then
+          table.insert(candidates, vim.env.VIRTUAL_ENV .. "/bin/ipython")
+        end
+        -- iron передаёт буфер под разными ключами: при запуске `current_bufnr`,
+        -- в format (bracketed_paste_python) — `current_buffer`
+        local bufnr = meta.current_bufnr or meta.current_buffer or 0
+        local file = vim.api.nvim_buf_get_name(bufnr)
+        local root = vim.fs.root(file ~= "" and file or vim.uv.cwd(), { ".venv", "venv" })
+        if root then
+          table.insert(candidates, root .. "/.venv/bin/ipython")
+          table.insert(candidates, root .. "/venv/bin/ipython")
+        end
+        for _, exe in ipairs(candidates) do
+          if vim.fn.executable(exe) == 1 then
+            return { exe, "--no-autoindent" }
+          end
+        end
+        return { "ipython", "--no-autoindent" }
+      end
+
+      require("iron.core").setup({
+        config = {
+          scratch_repl = true,
+          ignore_blank_lines = true,
+          repl_definition = {
+            python = {
+              command = ipython_cmd,
+              format = require("iron.fts.common").bracketed_paste_python,
+              block_dividers = { "# %%", "#%%" },
+            },
+          },
+          repl_open_cmd = view.split.vertical.botright(0.4),
+        },
+        -- Префикс <leader>i свободен; <leader>s* занят Telescope
+        keymaps = {
+          toggle_repl = "<leader>ii",
+          restart_repl = "<leader>ir",
+          send_motion = "<leader>is",
+          visual_send = "<leader>is",
+          send_line = "<leader>il",
+          send_code_block_and_move = "<leader>ic",
+          send_file = "<leader>if",
+          interrupt = "<leader>ix",
+          clear = "<leader>ie",
+          exit = "<leader>iq",
+        },
+      })
+    end,
   },
 }, {})
